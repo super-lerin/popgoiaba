@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop Goiaba - Cultura & Experiências</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #f43f5e;
+            --accent-light: #fb7185;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 90vw;
+            max-width: 1100px;
+            height: 80vh;
+            max-height: 700px;
+            position: relative;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding: 40px 50px;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .slide-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .slide-title {
+            font-size: 1.8rem;
+            color: var(--accent-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .slide-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .slide-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Elements & Typography */
+        h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--accent-light);
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Grids and Cards */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .card {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .card h3 {
+            color: var(--text-main);
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(244, 63, 94, 0.15);
+            color: var(--accent-light);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        /* Flow / Timeline */
+        .flow-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 140px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .flow-num {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        /* Footer Navigation */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90vw;
+            max-width: 1100px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+
+        .slide-counter {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .contact-box {
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .contact-box p {
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1 -->
+        <div class="slide active">
+            <div class="slide-header">
+                <div>
+                    <span class="badge">APRESENTAÇÃO COMERCIAL • 2026</span>
+                    <div class="slide-subtitle">Projetos Culturais • Eventos • Conteúdo • Audiovisual</div>
+                </div>
+                <div class="slide-number">01</div>
+            </div>
+            <div class="slide-content" style="text-align: center; align-items: center;">
+                <h1 style="font-size: 4rem; color: var(--accent-light);">POP GOIABA</h1>
+                <h2 style="font-size: 2rem; color: var(--text-main); margin-bottom: 30px;">Cultura & Experiências</h2>
+                <div class="card" style="max-width: 600px; text-align: left; border-left-width: 6px;">
+                    <p style="color: var(--text-main); font-weight: 600;">DIREÇÃO DE PROJETOS E CURADORIA</p>
+                    <p>Claudio Salles</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">em parceria com <strong style="color: var(--text-main);">Luz em Formas Produções e Eventos</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Posicionamento</div>
+                    <div class="slide-subtitle">Cultura como experiência</div>
+                </div>
+                <div class="slide-number">02</div>
+            </div>
+            <div class="slide-content">
+                <p style="font-size: 1.4rem; color: var(--text-main); margin-bottom: 30px; line-height: 1.4;">
+                    Criamos experiências que conectam <span class="highlight">cultura, público, espaços e marcas</span>.
+                </p>
+                <p style="font-size: 1.2rem; margin-bottom: 40px;">
+                    Uma frente integrada de concepção, curadoria, produção e comunicação — capaz de transformar uma ideia em programação, evento, conteúdo e memória.
+                </p>
+                <div class="grid-4">
+                    <div class="card"><span class="badge">01</span><h3>Conceito</h3></div>
+                    <div class="card"><span class="badge">02</span><h3>Curadoria</h3></div>
+                    <div class="card"><span class="badge">03</span><h3>Realização</h3></div>
+                    <div class="card"><span class="badge">04</span><h3>Conteúdo</h3></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Estrutura</div>
+                    <div class="slide-subtitle">Uma combinação que amplia a entrega</div>
+                </div>
+                <div class="slide-number">03</div>
+            </div>
+            <div class="slide-content">
+                <p style="margin-bottom: 20px;">Três competências complementares, coordenadas como uma única frente de projeto:</p>
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>Curadoria & Articulação</h3>
+                        <p style="color: var(--accent-light); margin-bottom: 10px;">Claudio Salles</p>
+                        <p>Concepção de projetos, curadoria artística, relacionamento com artistas e instituições, produção cultural, comunicação e direção de conteúdo.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Direção Artística & Espaço</h3>
+                        <p style="color: var(--accent-light); margin-bottom: 10px;">Luz em Formas</p>
+                        <p>Cenografia, iluminação, arquitetura cênica, direção artística, coordenação técnica e implantação de eventos e exposições.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Audiovisual & Circulação</h3>
+                        <p style="color: var(--accent-light); margin-bottom: 10px;">Rede de produção</p>
+                        <p>Vídeo, documentário, streaming, captação, edição, som, transmissão e conteúdos para ampliar a vida do projeto antes, durante e depois.</p>
+                    </div>
+                </div>
+                <div style="margin-top: 30px; text-align: center; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; font-weight: 600; letter-spacing: 1px;">
+                    UM PONTO DE CONTATO. &nbsp;|&nbsp; MÚLTIPLAS COMPETÊNCIAS. &nbsp;|&nbsp; ENTREGA SOB MEDIDA.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Trajetória</div>
+                    <div class="slide-subtitle">Claudio Salles • Direção de Projetos e Curadoria</div>
+                </div>
+                <div class="slide-number">04</div>
+            </div>
+            <div class="slide-content">
+                <div style="margin-bottom: 20px;">
+                    <span style="font-size: 2.5rem; font-weight: bold; color: var(--accent-light);">30+ ANOS</span>
+                    <span style="font-size: 1.2rem; color: var(--text-main);"> em cultura, comunicação e audiovisual</span>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Gestão Cultural & Pública</h3>
+                        <p>Subsecretário de Cultura de Niterói (2013–2016).</p>
+                        <p style="margin-top: 5px;">Realização de grandes shows com Caetano Veloso, Gilberto Gil, Zé Ramalho, Milton Nascimento, Geraldo Azevedo, Zeca Baleiro, entre outros.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Comunicação & Ciência</h3>
+                        <p>Coordenação de comunicação e audiovisual no INCT/InEAC • LEMI.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Rádio & Música</h3>
+                        <p>Fundador da Pop Goiaba • Globo FM • Rádio Fluminense FM.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Produção Cultural & Audiovisual</h3>
+                        <p>Trabalhos com Elza Soares, Claudio Zoli, Angela Ro Ro, Boca Livre, Egberto Gismonti, Paulo Moura, Zélia Duncan. Produtor audiovisual e documentarista.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Parceria</div>
+                    <div class="slide-subtitle">Luz em Formas: direção artística e execução</div>
+                </div>
+                <div class="slide-number">05</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-2" style="margin-bottom: 20px;">
+                    <div class="card">
+                        <h3>Djalma Amaral</h3>
+                        <p style="color: var(--accent-light);">Diretor Artístico • Iluminador • Dir. Fotografia • Dir. Cênica</p>
+                        <p style="margin-top: 8px;">Trajetória em teatro, exposições, shows, balés, DVDs e filmes. Trabalhos com Paulinho da Viola, Teresa Cristina, Wagner Tiso, Leoni, Bia Bedran.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Adriana Milhomem</h3>
+                        <p style="color: var(--accent-light);">Arquiteta • Cenógrafa • Iluminadora • Mestra em Artes Cênicas</p>
+                        <p style="margin-top: 8px;">Especialista em arquitetura cênica e projetos expositivos de grande porte.</p>
+                    </div>
+                </div>
+                <div class="card" style="border-left-color: var(--text-main);">
+                    <p style="color: var(--text-main); font-weight: bold; margin-bottom: 5px;">A Luz em Formas reúne:</p>
+                    <p>Cenografia, iluminação, figurino, coordenação técnica, locação de luz/som/vídeo, eventos, exposições, teatro, shows, stands e produção audiovisual.</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--accent-light);">Destaque: DreamWorks — Jornada do Esboço à Tela (CCBB RJ/BH)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Método</div>
+                    <div class="slide-subtitle">Do conceito à entrega</div>
+                </div>
+                <div class="slide-number">06</div>
+            </div>
+            <div class="slide-content">
+                <p style="margin-bottom: 30px;">Uma estrutura modular: entramos no ponto em que o cliente precisa — ou assumimos o percurso completo.</p>
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <div class="flow-num">01</div>
+                        <strong>Objetivo</strong>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Público, espaço, calendário e posicionamento</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">02</div>
+                        <strong>Conceito</strong>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Ideia, narrativa e desenho de experiência</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">03</div>
+                        <strong>Curadoria</strong>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Artistas, conteúdos, parceiros e formatos</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">04</div>
+                        <strong>Criação Cênica</strong>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Cenografia, iluminação e técnica</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">05</div>
+                        <strong>Produção</strong>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Operação, palco, equipe e audiovisual</p>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">06</div>
+                        <strong>Comunicação</strong>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">Registro, redes e memória do projeto</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Música & Shows</div>
+                    <div class="slide-subtitle">Experiência de palco + repertório de relações</div>
+                </div>
+                <div class="slide-number">07</div>
+            </div>
+            <div class="slide-content">
+                <div class="card" style="margin-bottom: 20px;">
+                    <h3>Produção e Programação</h3>
+                    <p>Shows, temporadas, festivais, projetos especiais, curadoria musical e articulação com artistas e equipes.</p>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <span class="badge">PRODUÇÃO & CURADORIA</span>
+                        <p>Claudio reúne experiência direta com nomes como Elza Soares, Claudio Zoli, Angela Ro Ro, Boca Livre, Egberto Gismonti, Paulo Moura e Zélia Duncan — somada à vivência de gestão cultural em grandes eventos públicos.</p>
+                    </div>
+                    <div class="card">
+                        <span class="badge">CASOS DE DESTAQUE</span>
+                        <p><strong>MPB & Jazz:</strong> Wagner Tiso e convidados (Luz em Formas)</p>
+                        <p style="margin-top: 10px;"><strong>A Noite Perfeita:</strong> Leoni • Cenografia e iluminação (Luz em Formas)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Exposições & Experiências</div>
+                    <div class="slide-subtitle">Espaço também conta uma história</div>
+                </div>
+                <div class="slide-number">08</div>
+            </div>
+            <div class="slide-content">
+                <p style="margin-bottom: 20px;">Projetos expositivos, cenografia e iluminação com circulação em grandes instituições culturais brasileiras:</p>
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>KANDINSKY</h3>
+                        <p style="color: var(--accent-light); font-size: 0.85rem;">CCBB • Rio de Janeiro / São Paulo / Belo Horizonte</p>
+                        <p style="margin-top: 10px;">Cenografia • 2015</p>
+                    </div>
+                    <div class="card">
+                        <h3>PORTINARI</h3>
+                        <p style="color: var(--accent-light); font-size: 0.85rem;">Caixa Cultural • Salvador / Recife / Curitiba</p>
+                        <p style="margin-top: 10px;">Cenografia e Iluminação • 2015/2018</p>
+                    </div>
+                    <div class="card">
+                        <h3>DREAMWORKS</h3>
+                        <p style="color: var(--accent-light); font-size: 0.85rem;">CCBB • Rio de Janeiro / Belo Horizonte</p>
+                        <p style="margin-top: 10px;">Cenografia e Iluminação • 2019</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Escala</div>
+                    <div class="slide-subtitle">Do institucional ao circuito internacional</div>
+                </div>
+                <div class="slide-number">09</div>
+            </div>
+            <div class="slide-content">
+                <p style="margin-bottom: 25px; font-size: 1.2rem;">Experiência comprovada em projetos com instituições, espaços culturais e operações de diferentes escalas.</p>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>FIOCRUZ • MUSEU DA VIDA</h3>
+                        <p style="color: var(--accent-light); font-size: 0.9rem; margin-bottom: 10px;">Exposição Permanente</p>
+                        <p>Cenografia, iluminação e produção de espaços interativos e educativos.</p>
+                    </div>
+                    <div class="card">
+                        <h3>1º LATIN AMERICAN CULTURAL FESTIVAL</h3>
+                        <p style="color: var(--accent-light); font-size: 0.9rem; margin-bottom: 10px;">Doha, Qatar</p>
+                        <p>Coordenação de iluminação para representação e programação latino-americana no exterior.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Conteúdo</div>
+                    <div class="slide-subtitle">O evento acontece — e continua circulando</div>
+                </div>
+                <div class="slide-number">10</div>
+            </div>
+            <div class="slide-content">
+                <p style="margin-bottom: 20px;">A experiência presencial pode nascer já pensada para gerar conteúdo, documentação e alcance digital.</p>
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>Vídeo & Transmissão</h3>
+                        <p>Captação multicâmera, direção, edição, peças para redes e streaming ao vivo de eventos, mesas e shows.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Documentário & Memória</h3>
+                        <p>Projetos audiovisuais focados em memória institucional, projetos culturais e histórias de marca.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Rádio, Podcast & Redes</h3>
+                        <p>Entrevistas, séries, web rádio, Reels, bastidores e cobertura em tempo real.</p>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 15px; border-left-color: var(--accent-light);">
+                    <p style="color: var(--text-main);"><strong>Ciência & Cultura:</strong> Conteúdo editorial e tradução de conhecimento para públicos amplos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Shopping Centers</div>
+                    <div class="slide-subtitle">Experiências para gerar fluxo, permanência e vínculo</div>
+                </div>
+                <div class="slide-number">11</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>Música ao Vivo</h3>
+                        <p>Pocket shows, festivais, temporadas e curadoria musical.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Datas Especiais</h3>
+                        <p>Natal, Carnaval, férias, festas juninas e calendários temáticos.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Exposições & Kids</h3>
+                        <p>Arte, ciência, oficinas, teatro e programação educativa para famílias.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Marcas & Ativações</h3>
+                        <p>Lançamentos com cenografia, palco, conteúdo e experiência imersiva.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Conteúdo ao Vivo</h3>
+                        <p>Podcasts, entrevistas, debates, transmissões e séries digitais no espaço.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Cultura Local & Gastronomia</h3>
+                        <p>Projetos que conectam o shopping ao território, convivência e consumo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Programação</div>
+                    <div class="slide-subtitle">Um calendário pode virar uma narrativa</div>
+                </div>
+                <div class="slide-number">12</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-3" style="margin-bottom: 20px;">
+                    <div class="card"><span class="badge">JAN–FEV</span><p>Verão • Férias • Música • Kids</p></div>
+                    <div class="card"><span class="badge">MAR–ABR</span><p>Cultura Local • Gastronomia • Encontros</p></div>
+                    <div class="card"><span class="badge">MAI–JUN</span><p>Festas Juninas • Memória • Tradição</p></div>
+                    <div class="card"><span class="badge">JUL–AGO</span><p>Férias • Ciência • Família • Exposições</p></div>
+                    <div class="card"><span class="badge">SET–OUT</span><p>Primavera • Arte • Música • Território</p></div>
+                    <div class="card"><span class="badge">NOV–DEZ</span><p>Natal • Celebração • Luz • Grandes Ativações</p></div>
+                </div>
+                <div class="grid-4">
+                    <div style="text-align: center;"><strong style="color: var(--accent-light);">FLUXO</strong><p style="font-size: 0.85rem;">Atração de público</p></div>
+                    <div style="text-align: center;"><strong style="color: var(--accent-light);">PERMANÊNCIA</strong><p style="font-size: 0.85rem;">Mais tempo no espaço</p></div>
+                    <div style="text-align: center;"><strong style="color: var(--accent-light);">VÍNCULO</strong><p style="font-size: 0.85rem;">Identidade e comunidade</p></div>
+                    <div style="text-align: center;"><strong style="color: var(--accent-light);">CONTEÚDO</strong><p style="font-size: 0.85rem;">Material para redes</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Formatos de Parceria</div>
+                    <div class="slide-subtitle">Estrutura flexível para diferentes escopos</div>
+                </div>
+                <div class="slide-number">13</div>
+            </div>
+            <div class="slide-content">
+                <p style="margin-bottom: 20px;">O projeto é montado conforme objetivo, orçamento, espaço e calendário — sem obrigar o cliente a contratar uma solução maior do que precisa.</p>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>01. Projeto Único</h3>
+                        <p>Uma ação, evento ou ativação com escopo fechado e pontual.</p>
+                    </div>
+                    <div class="card">
+                        <h3>02. Série / Temporada</h3>
+                        <p>Programação recorrente com identidade e curadoria próprias.</p>
+                    </div>
+                    <div class="card">
+                        <h3>03. Calendário Anual</h3>
+                        <p>Planejamento contínuo de experiências ao longo de todo o ano.</p>
+                    </div>
+                    <div class="card">
+                        <h3>04. Projeto de Marca</h3>
+                        <p>Ação concebida em conjunto com marketing, comunicação e parceiros.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Proposta de Valor</div>
+                    <div class="slide-subtitle">Por que essa combinação é diferente?</div>
+                </div>
+                <div class="slide-number">14</div>
+            </div>
+            <div class="slide-content">
+                <div class="grid-3" style="margin-bottom: 20px;">
+                    <div class="card">
+                        <h3>Repertório</h3>
+                        <p>Décadas de experiência em cultura, música, comunicação e espaços cênicos.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Curadoria</h3>
+                        <p>Projetos com identidade singular — não um pacote genérico de entretenimento.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Execução</h3>
+                        <p>Capacidade técnica para transformar conceito em experiência real com excelência.</p>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3>Conteúdo</h3>
+                        <p>Audiovisual e comunicação incorporados ativamente desde o desenho do projeto.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Rede sob medida</h3>
+                        <p>Profissionais e fornecedores de alto nível ativados conforme cada desafio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div>
+                    <div class="slide-title">Contato</div>
+                    <div class="slide-subtitle">Vamos desenhar a próxima experiência?</div>
+                </div>
+                <div class="slide-number">15</div>
+            </div>
+            <div class="slide-content" style="text-align: center;">
+                <h2 style="font-size: 2.5rem; color: var(--accent-light);">POP GOIABACultura & Experiências</h2>
+                <p style="font-size: 1.1rem; color: var(--text-main); margin-bottom: 20px;">DIREÇÃO DE PROJETOS E CURADORIA</p>
+                
+                <div class="contact-box" style="text-align: left; max-width: 650px; margin: 0 auto;">
+                    <p style="font-size: 1.2rem; font-weight: bold; color: var(--accent-light);">Claudio Salles</p>
+                    <p>📱 (21) 96926-8933 &nbsp;|&nbsp; ✉️ claudiosalles@hotmail.com</p>
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                    <p style="font-size: 1.2rem; font-weight: bold; color: var(--accent-light);">Djalma Amaral</p>
+                    <p>📱 (21) 99917-3816 &nbsp;|&nbsp; ✉️ amaraldjalma@gmail.com</p>
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                    <p style="font-size: 0.9rem; color: var(--text-muted); text-align: center;">em parceria com <strong>Luz em Formas Produções e Eventos</strong></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="changeSlide(-1)">Anterior</button>
+        <span class="slide-counter" id="slideCounter">Slide 1 de 15</span>
+        <button class="btn" id="nextBtn" onclick="changeSlide(1)">Próximo</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            slideCounter.textContent = `Slide ${currentSlide + 1} de ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            updateSlide();
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                if (currentSlide < slides.length - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        updateSlide();
+    </script>
+</body>
+</html>
